@@ -1,4 +1,4 @@
-git init
+git rm -r --cached .
 git add .
 git commit -m "Final Polish - Premium KD Hospital Website"
 git remote add origin https://github.com/akashnair14/kdhospital.git
