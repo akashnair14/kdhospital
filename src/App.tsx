@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import { HashRouter, Routes, Route } from 'react-router-dom'
 import ScrollToTop from './components/ScrollToTop'
 import MainLayout from './layout/MainLayout'
 import Home from './pages/Home'
@@ -17,7 +17,7 @@ import DepartmentDetail from './pages/DepartmentDetail'
 
 function App() {
     return (
-        <BrowserRouter>
+        <HashRouter>
             <ScrollToTop />
             <Routes>
                 <Route path="/" element={<MainLayout />}>
@@ -37,7 +37,7 @@ function App() {
                     <Route path="*" element={<Home />} />
                 </Route>
             </Routes>
-        </BrowserRouter>
+        </HashRouter>
     )
 }
 
