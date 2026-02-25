@@ -1,51 +1,63 @@
 import { motion } from 'framer-motion'
-import { CheckCircle2, Users, Microscope, Calendar, ShieldCheck, ArrowRight } from 'lucide-react'
+import { CheckCircle2, Users, Microscope, Calendar, ShieldCheck, ArrowRight, Stethoscope } from 'lucide-react'
 import { useParams, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
+import { departmentsData } from '../data/departmentsData'
+import SEO from '../components/SEO'
 
-const departmentData: Record<string, any> = {
-    "cardiology": {
-        title: "Cardiology Department",
-        overview: "Our Cardiology department provides comprehensive heart care using the latest technology and techniques. From diagnosis to complex surgeries, we are committed to your heart's health.",
-        conditions: ["Coronary Artery Disease", "Heart Failure", "Arrhythmias", "Valvular Heart Disease", "Hypertension"],
-        procedures: ["Angioplasty", "Bypass Surgery", "ECHOs", "TMTs", "Pacemaker Implantation"],
-        doctors: [
-            { name: "Dr. Arvind Sharma", role: "Chief Cardiologist", image: "https://images.unsplash.com/photo-1612349317150-e410f624c427?q=80&w=400&auto=format&fit=crop" }
-        ],
-        facilities: ["Advanced Cath Lab", "Cardiac ICU", "Non-invasive Cardiology Lab", "Holter Monitoring"],
-        color: "rose"
+const colorMap: Record<string, any> = {
+    rose: {
+        bg: "bg-rose-500",
+        lightBg: "bg-rose-50",
+        border: "border-rose-100",
+        text: "text-rose-500",
+        gradient: "from-rose-500 to-rose-600"
     },
-    "neurology": {
-        title: "Neurology Department",
-        overview: "Providing expert care for complex neurological conditions of the brain, spine, and nervous system with precision and care.",
-        conditions: ["Stroke", "Epilepsy", "Parkinson's Disease", "Multiple Sclerosis", "Alzheimer's Disease"],
-        procedures: ["Brain Surgery", "Spine Surgery", "EEGs", "EMGs", "Sleep Studies"],
-        doctors: [
-            { name: "Dr. Vikram Singh", role: "Lead Neurologist", image: "https://images.unsplash.com/photo-1537368910025-700350fe46c7?q=80&w=400&auto=format&fit=crop" }
-        ],
-        facilities: ["Neuromonitoring Lab", "Stroke Unit", "Stroke Recovery Center", "Advance MRI/CT"],
-        color: "indigo"
+    indigo: {
+        bg: "bg-indigo-500",
+        lightBg: "bg-indigo-50",
+        border: "border-indigo-100",
+        text: "text-indigo-500",
+        gradient: "from-indigo-500 to-indigo-600"
     },
-    "orthopedics": {
-        title: "Orthopedic Department",
-        overview: "Specialized care for bones, joints, and ligaments using minimally invasive and robotic-assisted techniques for faster recovery.",
-        conditions: ["Joint Pain", "Fractures", "Sports Injuries", "Arthritis", "Scoliosis"],
-        procedures: ["Knee Replacement", "Hip Replacement", "Arthroscopy", "Spine Fixation", "Fracture Surgery"],
-        doctors: [
-            { name: "Dr. Rajesh Kumar", role: "Orthopedic Surgeon", image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=400&auto=format&fit=crop" }
-        ],
-        facilities: ["Digital Ortho-Suite", "Robotic Surgery Wing", "Physiotherapy Center", "Sports Medicine Lab"],
-        color: "blue"
+    blue: {
+        bg: "bg-blue-500",
+        lightBg: "bg-blue-50",
+        border: "border-blue-100",
+        text: "text-blue-500",
+        gradient: "from-blue-500 to-blue-600"
+    },
+    purple: {
+        bg: "bg-purple-500",
+        lightBg: "bg-purple-50",
+        border: "border-purple-100",
+        text: "text-purple-500",
+        gradient: "from-purple-500 to-purple-600"
+    },
+    pink: {
+        bg: "bg-pink-500",
+        lightBg: "bg-pink-50",
+        border: "border-pink-100",
+        text: "text-pink-500",
+        gradient: "from-pink-500 to-pink-600"
+    },
+    emerald: {
+        bg: "bg-emerald-500",
+        lightBg: "bg-emerald-50",
+        border: "border-emerald-100",
+        text: "text-emerald-500",
+        gradient: "from-emerald-500 to-emerald-600"
     }
 }
 
 export default function DepartmentTemplate() {
-    const { id } = useParams()
-    const data = id ? departmentData[id] : null
+    const { id } = useParams<{ id: string }>()
+    const data = id ? departmentsData[id] : null
 
     if (!data) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen pt-20">
+                <SEO title="Department Not Found" description="The requested medical department could not be found." />
                 <h1 className="text-2xl font-bold mb-4">Department Not Found</h1>
                 <Link to="/services" className="text-primary font-bold hover:underline">Back to Services</Link>
             </div>
@@ -53,11 +65,17 @@ export default function DepartmentTemplate() {
     }
 
     const { title, overview, conditions, procedures, doctors, facilities, color } = data
+    const theme = colorMap[color] || colorMap.blue
 
     return (
         <div className="flex flex-col w-full min-h-screen pt-20">
+            <SEO
+                title={title}
+                description={overview}
+                keywords={`${title}, KD Hospital Ahmedabad, medical services`}
+            />
             {/* dynamic Header */}
-            <section className={`py-24 bg-${color}-500 text-white relative overflow-hidden`}>
+            <section className={`py-24 ${theme.bg} text-white relative overflow-hidden`}>
                 <div className="absolute top-0 right-0 w-1/3 h-full bg-white/10 rounded-l-full blur-3xl translate-x-1/2"></div>
                 <div className="container mx-auto px-4 relative z-10 text-center">
                     <motion.h1
@@ -86,13 +104,13 @@ export default function DepartmentTemplate() {
                         <div className="space-y-12">
                             <div>
                                 <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                    <ShieldCheck className={`text-${color}-500`} />
+                                    <ShieldCheck className={theme.text} />
                                     Conditions We Treat
                                 </h3>
                                 <div className="grid sm:grid-cols-2 gap-4">
                                     {conditions.map((c: string) => (
                                         <div key={c} className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                            <CheckCircle2 size={18} className={`text-${color}-500`} />
+                                            <CheckCircle2 size={18} className={theme.text} />
                                             <span className="font-medium text-slate-700">{c}</span>
                                         </div>
                                     ))}
@@ -101,13 +119,13 @@ export default function DepartmentTemplate() {
 
                             <div>
                                 <h3 className="text-2xl font-bold text-slate-900 mb-6 flex items-center gap-2">
-                                    <Microscope className={`text-${color}-500`} />
+                                    <Microscope className={theme.text} />
                                     Advanced Procedures
                                 </h3>
                                 <div className="grid sm:grid-cols-2 gap-4">
                                     {procedures.map((p: string) => (
                                         <div key={p} className="flex items-center gap-3 bg-slate-50 p-4 rounded-xl border border-slate-100">
-                                            <CheckCircle2 size={18} className={`text-${color}-500`} />
+                                            <CheckCircle2 size={18} className={theme.text} />
                                             <span className="font-medium text-slate-700">{p}</span>
                                         </div>
                                     ))}
@@ -116,15 +134,15 @@ export default function DepartmentTemplate() {
                         </div>
 
                         {/* Facilities */}
-                        <div className={`bg-${color}-50 p-10 md:p-12 rounded-[3.5rem] border border-${color}-100`}>
+                        <div className={`${theme.lightBg} p-10 md:p-12 rounded-[3.5rem] border ${theme.border}`}>
                             <h3 className="text-2xl font-bold text-slate-900 mb-8 flex items-center gap-2">
-                                <Users className={`text-${color}-500`} />
+                                <Users className={theme.text} />
                                 Specialized Facilities
                             </h3>
                             <div className="space-y-6">
                                 {facilities.map((f: string) => (
                                     <div key={f} className="flex items-start gap-4">
-                                        <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center text-${color}-500 shadow-sm shrink-0`}>
+                                        <div className={`w-10 h-10 rounded-xl bg-white flex items-center justify-center ${theme.text} shadow-sm shrink-0`}>
                                             <CheckCircle2 size={20} />
                                         </div>
                                         <div>
@@ -146,7 +164,7 @@ export default function DepartmentTemplate() {
                     <div className="flex justify-center flex-wrap gap-8">
                         {doctors.map((doc: any, i: number) => (
                             <motion.div
-                                key={doc.name}
+                                key={doc.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
@@ -158,7 +176,7 @@ export default function DepartmentTemplate() {
                                 </div>
                                 <h4 className="text-xl font-bold text-slate-900">{doc.name}</h4>
                                 <p className="text-primary font-bold text-sm mb-4">{doc.role}</p>
-                                <Link to="/doctors" className="text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2">
+                                <Link to={`/doctors/${doc.id}`} className="text-slate-400 font-bold text-xs uppercase tracking-widest hover:text-primary transition-colors flex items-center gap-2">
                                     View Full Profile <ArrowRight size={14} />
                                 </Link>
                             </motion.div>
@@ -169,10 +187,10 @@ export default function DepartmentTemplate() {
 
             {/* CTA */}
             <section className="py-24 container mx-auto px-4">
-                <div className={`bg-gradient-to-r from-${color}-500 to-${color}-600 rounded-[3rem] p-12 md:p-20 text-center text-white relative overflow-hidden shadow-2xl`}>
+                <div className={`bg-gradient-to-r ${theme.gradient} rounded-[3rem] p-12 md:p-20 text-center text-white relative overflow-hidden shadow-2xl`}>
                     <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2"></div>
                     <div className="relative z-10">
-                        <h2 className="text-4xl md:text-5xl font-extrabold mb-8">Ready to Consultation?</h2>
+                        <h2 className="text-4xl md:text-5xl font-extrabold mb-8">Ready for a Consultation?</h2>
                         <p className="text-white/80 text-xl mb-12 max-w-2xl mx-auto font-medium">Book an appointment with our departmental experts today and get the care you deserve.</p>
                         <Link to="/appointment">
                             <Button size="lg" className="bg-white text-slate-900 hover:bg-slate-100 px-12 py-8 rounded-2xl font-bold text-xl shadow-xl shadow-black/10 group">

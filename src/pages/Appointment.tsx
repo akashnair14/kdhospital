@@ -1,5 +1,5 @@
 import { useState, useEffect, useMemo } from 'react'
-import { motion } from 'framer-motion'
+import { motion, AnimatePresence } from 'framer-motion'
 import {
     Calendar,
     Clock,
@@ -17,6 +17,7 @@ import {
 } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import SEO from '../components/SEO'
+import { Link } from 'react-router-dom'
 
 // Mock Data for Logic
 const DEPARTMENTS = [
@@ -436,10 +437,4 @@ export default function Appointment() {
             </section>
         </div>
     )
-}
-
-// Helper Link component since I'm using it in the success view
-import { Link as RouterLink } from 'react-router-dom'
-function Link({ to, children, className, ...props }: any) {
-    return <RouterLink to={to} className={className} {...props}>{children}</RouterLink>
 }

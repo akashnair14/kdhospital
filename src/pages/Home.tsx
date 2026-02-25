@@ -1,10 +1,12 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
-import { Calendar, PhoneCall, ShieldPlus, Users, Stethoscope, ArrowRight, HeartPulse, Activity, Baby, Pill, Ambulance, Flower2, HeartHandshake, ShieldCheck, Microscope, CircleDollarSign, Building2, Quote, ChevronLeft, ChevronRight } from 'lucide-react'
+import { Calendar, PhoneCall, ShieldPlus, Users, Stethoscope, ArrowRight, HeartPulse, Activity, Baby, Pill, Ambulance, Flower2, HeartHandshake, ShieldCheck, Microscope, CircleDollarSign, Building2, Quote, ChevronLeft, ChevronRight, PhoneCall as Phone } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { hospitalInfo } from '../data/hospitalInfo'
 import SEO from '../components/SEO'
 import { Button } from '@/components/ui/button'
+import { doctorsData } from '../data/doctorsData'
+import { departmentsData } from '../data/departmentsData'
 
 const fadeUp = {
     hidden: { opacity: 0, y: 30 },
@@ -22,80 +24,22 @@ const staggerContainer = {
     }
 }
 
-const services = [
-    {
-        title: "Cardiology",
-        description: "Advanced heart care including diagnosis, treatment, and surgery by top cardiologists.",
-        icon: HeartPulse,
-        link: "/services/cardiology",
-        colorClass: "bg-white text-rose-500 border-rose-100 group-hover:bg-rose-500 group-hover:text-white"
-    },
-    {
-        title: "Orthopedics",
-        description: "Comprehensive care for bones, joints, ligaments, tendons, muscles, and nerves.",
-        icon: Activity,
-        link: "/services/orthopedics",
-        colorClass: "bg-white text-blue-500 border-blue-100 group-hover:bg-blue-500 group-hover:text-white"
-    },
-    {
-        title: "Pediatrics",
-        description: "Specialized medical care for infants, children, and adolescents ensuring healthy growth.",
-        icon: Baby,
-        link: "/services/pediatrics",
-        colorClass: "bg-white text-purple-500 border-purple-100 group-hover:bg-purple-500 group-hover:text-white"
-    },
-    {
-        title: "Gynecology",
-        description: "Expert women's health services from routine checkups to advanced specialized treatments.",
-        icon: Flower2,
-        link: "/services/gynecology",
-        colorClass: "bg-white text-pink-500 border-pink-100 group-hover:bg-pink-500 group-hover:text-white"
-    },
-    {
-        title: "General Medicine",
-        description: "Primary healthcare services focusing on prevention, diagnosis, and treatment of adult diseases.",
-        icon: Pill,
-        link: "/services/general-medicine",
-        colorClass: "bg-white text-teal-500 border-teal-100 group-hover:bg-teal-500 group-hover:text-white"
-    },
-    {
-        title: "Emergency Care",
-        description: "24/7 rapid response and trauma care with state-of-the-art emergency resuscitation facilities.",
-        icon: Ambulance,
-        link: "/emergency",
-        colorClass: "bg-white text-red-500 border-red-100 group-hover:bg-red-500 group-hover:text-white"
-    }
+// Get specific services for home highlight
+const homeServices = [
+    { ...departmentsData["cardiology"], colorClass: "bg-white text-rose-500 border-rose-100 group-hover:bg-rose-500 group-hover:text-white", link: "/services/cardiology" },
+    { ...departmentsData["orthopedics"], colorClass: "bg-white text-blue-500 border-blue-100 group-hover:bg-blue-500 group-hover:text-white", link: "/services/orthopedics" },
+    { ...departmentsData["pediatrics"], colorClass: "bg-white text-purple-500 border-purple-100 group-hover:bg-purple-500 group-hover:text-white", link: "/services/pediatrics" },
+    { ...departmentsData["gynecology"], colorClass: "bg-white text-pink-500 border-pink-100 group-hover:bg-pink-500 group-hover:text-white", link: "/services/gynecology" },
+    { id: "general-medicine", title: "General Medicine", description: "Primary healthcare services focusing on prevention, diagnosis, and treatment of adult diseases.", icon: Pill, colorClass: "bg-white text-teal-500 border-teal-100 group-hover:bg-teal-500 group-hover:text-white", link: "/services/general-medicine" },
+    { id: "emergency", title: "Emergency Care", description: "24/7 rapid response and trauma care with state-of-the-art emergency resuscitation facilities.", icon: Ambulance, colorClass: "bg-white text-red-500 border-red-100 group-hover:bg-red-500 group-hover:text-white", link: "/emergency" }
 ]
 
-const doctors = [
-    {
-        name: "Dr. Arvind Sharma",
-        specialization: "Chief Cardiologist",
-        experience: "15+ Years Experience",
-        image: "https://images.unsplash.com/photo-1612349317150-e410f624c427?q=80&w=800&auto=format&fit=crop",
-        link: "/doctors/arvind-sharma"
-    },
-    {
-        name: "Dr. Meera Patel",
-        specialization: "Senior Pediatrician",
-        experience: "12+ Years Experience",
-        image: "https://images.unsplash.com/photo-1594824416965-9f18a5621c1f?q=80&w=800&auto=format&fit=crop",
-        link: "/doctors/meera-patel"
-    },
-    {
-        name: "Dr. Rajesh Kumar",
-        specialization: "Orthopedic Surgeon",
-        experience: "20+ Years Experience",
-        image: "https://images.unsplash.com/photo-1622253692010-333f2da6031d?q=80&w=800&auto=format&fit=crop",
-        link: "/doctors/rajesh-kumar"
-    },
-    {
-        name: "Dr. Sneha Desai",
-        specialization: "Lead Gynecologist",
-        experience: "10+ Years Experience",
-        image: "https://images.unsplash.com/photo-1559839734-2b71ea197ec2?q=80&w=800&auto=format&fit=crop",
-        link: "/doctors/sneha-desai"
-    }
+// Get top 4 doctors for the homepage
+const highlightedDoctors = [
+    doctorsData["arvind-sharma"],
+    doctorsData["meera-patel"],
+    doctorsData["rajesh-kumar"],
+    doctorsData["sneha-desai"]
 ]
 
 const features = [
@@ -355,7 +299,7 @@ export default function Home() {
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
                         {/* Services Cards */}
-                        {services.map((service, index) => (
+                        {homeServices.map((service, index) => (
                             <motion.div
                                 key={service.title}
                                 initial={{ opacity: 0, y: 30 }}
@@ -428,9 +372,9 @@ export default function Home() {
                     </div>
 
                     <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        {doctors.map((doctor, index) => (
+                        {highlightedDoctors.map((doctor, index) => (
                             <motion.div
-                                key={doctor.name}
+                                key={doctor.id}
                                 initial={{ opacity: 0, y: 30 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true, margin: "-50px" }}
@@ -440,7 +384,7 @@ export default function Home() {
                                 <div className="aspect-square w-full overflow-hidden bg-slate-100 relative">
                                     <img src={doctor.image} alt={doctor.name} loading="lazy" className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700" />
                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end justify-center p-6">
-                                        <Link to={doctor.link} className="bg-white text-slate-900 font-bold px-6 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-primary hover:text-white">
+                                        <Link to={`/doctors/${doctor.id}`} className="bg-white text-slate-900 font-bold px-6 py-2 rounded-full transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 hover:bg-primary hover:text-white">
                                             View Profile
                                         </Link>
                                     </div>

@@ -2,48 +2,20 @@ import { motion } from 'framer-motion'
 import { GraduationCap, Award, Stethoscope, Clock, Calendar, ShieldCheck, MapPin, ArrowLeft } from 'lucide-react'
 import { useParams, Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
-
-const doctorProfiles: Record<string, any> = {
-    "arvind-sharma": {
-        name: "Dr. Arvind Sharma",
-        role: "Chief Cardiologist",
-        image: "https://images.unsplash.com/photo-1612349317150-e410f624c427?q=80&w=800&auto=format&fit=crop",
-        bio: "Dr. Arvind Sharma is a world-renowned cardiologist with over 15 years of experience in interventional cardiology. He has performed over 5,000 successful cardiac procedures and is a pioneer in minimally invasive heart surgeries. His patient-first approach and dedication to clinical excellence have earned him numerous national awards.",
-        education: [
-            "MD - Internal Medicine, AIIMS New Delhi",
-            "DM - Cardiology, PGIMER Chandigarh",
-            "Fellowship in Interventional Cardiology, Mount Sinai New York",
-            "FACC - Fellow of American College of Cardiology"
-        ],
-        experience: [
-            "15+ Years of Clinical Practice",
-            "Ex-Senior Consultant at Max Healthcare",
-            "Head of Cardiology at KD Hospital since 2018",
-            "Visiting Faculty at various International Medical Institutes"
-        ],
-        specialties: [
-            "Interventional Cardiology",
-            "Heart Failure Management",
-            "Electrophysiology",
-            "Valvular Heart Disease",
-            "Hypertension Management"
-        ],
-        timings: [
-            { days: "Monday - Friday", time: "09:00 AM - 04:00 PM" },
-            { days: "Saturday", time: "10:00 AM - 01:00 PM (Emergency Only)" }
-        ],
-        location: "Block A, First Floor, Room 102"
-    },
-    // More doctors can be added here following the same structure
-}
+import { doctorsData } from '../data/doctorsData'
+import SEO from '../components/SEO'
 
 export default function DoctorProfile() {
-    const { id } = useParams()
-    const doctor = id ? doctorProfiles[id] : doctorProfiles["arvind-sharma"] // Fallback for demo
+    const { id } = useParams<{ id: string }>()
+    const doctor = id ? doctorsData[id] : doctorsData["arvind-sharma"]
 
     if (!doctor) {
         return (
             <div className="flex flex-col items-center justify-center min-h-screen pt-20">
+                <SEO
+                    title="Profile Not Found"
+                    description="The requested doctor profile could not be found. Please check our doctors directory."
+                />
                 <h1 className="text-2xl font-bold mb-4">Doctor Profile Not Found</h1>
                 <Link to="/doctors" className="text-primary font-bold hover:underline">Back to Doctors</Link>
             </div>
@@ -52,6 +24,11 @@ export default function DoctorProfile() {
 
     return (
         <div className="flex flex-col w-full min-h-screen pt-20 pb-20 bg-slate-50">
+            <SEO
+                title={`${doctor.name} - ${doctor.role}`}
+                description={`${doctor.name} is a ${doctor.role} at KD Hospital. ${doctor.bio.substring(0, 150)}...`}
+                keywords={`${doctor.name}, ${doctor.specialization}, KD Hospital doctors, ${doctor.role}`}
+            />
             {/* Breadcrumb/Back */}
             <div className="container mx-auto px-4 py-8">
                 <Link to="/doctors" className="inline-flex items-center text-slate-500 hover:text-primary font-bold text-sm transition-colors group">
@@ -147,10 +124,10 @@ export default function DoctorProfile() {
                             >
                                 <h2 className="text-2xl font-extrabold text-slate-900 mb-8 flex items-center gap-3">
                                     <Award className="text-primary" />
-                                    Experience
+                                    Experience Highlights
                                 </h2>
                                 <ul className="space-y-6">
-                                    {doctor.experience.map((exp: string, i: number) => (
+                                    {doctor.experience_list.map((exp: string, i: number) => (
                                         <li key={i} className="flex gap-4">
                                             <div className="w-2 h-2 rounded-full bg-secondary mt-2 shrink-0"></div>
                                             <span className="text-slate-600 font-medium">{exp}</span>

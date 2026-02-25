@@ -1,60 +1,21 @@
 import { motion } from 'framer-motion'
-import { HeartPulse, Activity, Baby, Ambulance, Flower2, Brain, Bone, Microscope } from 'lucide-react'
+import { Activity } from 'lucide-react'
 import { Link } from 'react-router-dom'
 import { Button } from '@/components/ui/button'
 import SEO from '../components/SEO'
+import { departmentsData } from '../data/departmentsData'
 
-const allServices = [
-    {
-        title: "Cardiology",
-        description: "Specialized heart care and advanced cardiac procedures including bypass and angioplasty.",
-        icon: HeartPulse,
-        colorClass: "bg-rose-500",
-        link: "/services/cardiology"
-    },
-    {
-        title: "Orthopedics",
-        description: "Expert bone, joint, and muscle care with advanced robotic surgical options for mobility.",
-        icon: Bone,
-        colorClass: "bg-blue-500",
-        link: "/services/orthopedics"
-    },
-    {
-        title: "Neurology",
-        description: "Expert care for complex brain, spine, and nervous system disorders by top neurosurgeons.",
-        icon: Brain,
-        colorClass: "bg-indigo-500",
-        link: "/services/neurology"
-    },
-    {
-        title: "Pediatrics",
-        description: "Comprehensive medical services for infants and children ensuring healthy growth markers.",
-        icon: Baby,
-        colorClass: "bg-purple-500",
-        link: "/services/pediatrics"
-    },
-    {
-        title: "Gynecology",
-        description: "Dedicated healthcare for women featuring comprehensive prenatal and postnatal care.",
-        icon: Flower2,
-        colorClass: "bg-pink-500",
-        link: "/services/gynecology"
-    },
-    {
-        title: "General Surgery",
-        description: "Modern surgical procedures focusing on abdominal contents and other core system issues.",
-        icon: Microscope,
-        colorClass: "bg-emerald-500",
-        link: "/services/general-surgery"
-    },
-    {
-        title: "Emergency",
-        description: "24/7 immediate medical attention for life-threatening conditions with rapid response.",
-        icon: Ambulance,
-        colorClass: "bg-red-500",
-        link: "/emergency"
-    }
-]
+const allServices = Object.values(departmentsData)
+
+// Color shade mapping for Tailwind consistency
+const colorShades: Record<string, string> = {
+    rose: "bg-rose-500",
+    blue: "bg-blue-500",
+    indigo: "bg-indigo-500",
+    purple: "bg-purple-500",
+    pink: "bg-pink-500",
+    emerald: "bg-emerald-500"
+}
 
 export default function Services() {
     return (
@@ -91,19 +52,22 @@ export default function Services() {
                     <div className="grid md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                         {allServices.map((service, index) => (
                             <motion.div
-                                key={service.title}
+                                key={service.id}
                                 initial={{ opacity: 0, y: 20 }}
                                 whileInView={{ opacity: 1, y: 0 }}
                                 viewport={{ once: true }}
                                 transition={{ delay: index * 0.05 }}
-                                className="group bg-white p-8 rounded-[2.5rem] border border-slate-100 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-2"
+                                className="group bg-white p-8 rounded-[2.5rem] border border-slate-100 hover:shadow-2xl hover:shadow-primary/5 transition-all duration-300 hover:-translate-y-2 flex flex-col"
                             >
-                                <div className={`w-14 h-14 rounded-2xl ${service.colorClass} text-white flex items-center justify-center mb-6 shadow-lg shadow-black/5`}>
+                                <div className={`w-14 h-14 rounded-2xl ${colorShades[service.color] || 'bg-primary'} text-white flex items-center justify-center mb-6 shadow-lg shadow-black/5`}>
                                     <service.icon size={28} />
                                 </div>
                                 <h3 className="text-xl font-bold text-slate-900 mb-3 group-hover:text-primary transition-colors">{service.title}</h3>
                                 <p className="text-slate-500 text-sm leading-relaxed mb-8 flex-1">{service.description}</p>
-                                <Link to={service.link} className="inline-flex items-center text-primary font-bold text-sm hover:underline">
+                                <Link
+                                    to={service.id === 'emergency' ? '/emergency' : `/services/${service.id}`}
+                                    className="inline-flex items-center text-primary font-bold text-sm hover:underline mt-auto"
+                                >
                                     Learn More <Activity size={14} className="ml-2" />
                                 </Link>
                             </motion.div>
